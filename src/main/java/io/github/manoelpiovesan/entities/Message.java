@@ -21,10 +21,7 @@ public class Message extends AbstractFullEntity {
     @Column(name = "text")
     public String text;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    public User user;
+
 
     public Message() {
     }
@@ -34,12 +31,11 @@ public class Message extends AbstractFullEntity {
      *
      * @param chatId Chat ID
      * @param text   Message Text
-     * @param user   User
      */
-    public Message(String chatId, String text, User user) {
+    public Message(String chatId, String text) {
         this.chatId = chatId;
         this.text = text;
-        this.user = user;
+
     }
 
 
@@ -47,12 +43,11 @@ public class Message extends AbstractFullEntity {
      * Constructor from IncomingMessage
      *
      * @param msgReceived Message Received
-     * @param user User
      */
-    public Message(IncomingMessage msgReceived, User user) {
+    public Message(IncomingMessage msgReceived) {
         this.chatId = msgReceived.getChat().getId();
         this.text = msgReceived.getText();
-        this.user = user;
+
     }
 
 }

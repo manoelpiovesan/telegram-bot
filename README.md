@@ -17,3 +17,12 @@ Rode o projeto com o comando:
 quarkus dev
 ```
 
+
+
+```mermaid
+graph TD
+    U[Usuário] --> C[Chat]
+    C --> M[Mensagem]
+    
+```
+

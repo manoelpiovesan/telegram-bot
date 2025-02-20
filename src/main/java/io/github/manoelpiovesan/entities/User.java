@@ -33,7 +33,7 @@ public class User extends AbstractFullEntity{
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    public List<Message> messages;
+    public List<Chat> chats;
 
 
     public User() {

@@ -1,8 +1,7 @@
 package io.github.manoelpiovesan.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -19,6 +18,11 @@ public class Chat extends AbstractFullEntity {
 
     @Column(name = "tel_chat_id", nullable = false)
     public Long telChatId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    public User user;
 
 
     public Chat() {
