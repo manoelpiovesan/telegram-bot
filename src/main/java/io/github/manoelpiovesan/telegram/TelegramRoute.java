@@ -18,6 +18,8 @@ public class TelegramRoute extends RouteBuilder {
 
     @Inject
     TelegramService telegramService;
+    @Inject
+    MessageRepository messageRepository;
 
     /**
      * Configure the route
@@ -38,12 +40,40 @@ public class TelegramRoute extends RouteBuilder {
     public void onMessageReceived(Exchange exchange) {
 
         IncomingMessage msg = exchange.getIn().getBody(IncomingMessage.class);
-        PGMessage pgMsg = msgRepository.store(msg);
 
-        if (pgMsg != null) {
-            telegramService.sendMessage(msg.getChat().getId(), "Message stored! \n" + pgMsg.toString());
+        if (msg.getText().startsWith("/")) {
+            handleCommand(msg);
+        } else {
+            telegramService.sendMessage(msg.getChat().getId(), "What?");
         }
 
+    }
+
+    /**
+     * Command handler
+     */
+    public void handleCommand(IncomingMessage message) {
+        String command = message.getText().split(" ")[0];
+        message.setText(message.getText().replace(command, "").trim());
+        switch (command) {
+            case "/store":
+                if(message.getText().isEmpty()){
+                    telegramService.sendMessage(message.getChat().getId(), "Message cannot be empty.");
+                    return;
+                }
+                PGMessage pgMsg = messageRepository.store(message);
+                telegramService.sendMessage(message.getChat().getId(), "Message \"" + pgMsg.text + "\" stored.");
+
+                break;
+            case "/start":
+                telegramService.sendMessage(message.getChat().getId(), "Welcome to the bot!");
+                break;
+            case "/help":
+                telegramService.sendMessage(message.getChat().getId(), "Help message");
+                break;
+            default:
+                telegramService.sendMessage(message.getChat().getId(), "Command not found");
+        }
     }
 
 

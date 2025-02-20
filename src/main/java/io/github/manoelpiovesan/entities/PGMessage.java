@@ -1,5 +1,6 @@
 package io.github.manoelpiovesan.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.apache.camel.component.telegram.model.IncomingMessage;
@@ -18,7 +19,7 @@ import java.util.Date;
 public class PGMessage extends AbstractFullEntity {
 
     // Chat<->Message
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id", nullable = false)
     public PGChat chat;

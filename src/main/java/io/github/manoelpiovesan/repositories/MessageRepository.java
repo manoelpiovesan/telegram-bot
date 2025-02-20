@@ -9,6 +9,8 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.apache.camel.component.telegram.model.IncomingMessage;
 
+import java.util.List;
+
 /**
  * @author Manoel Rodrigues
  */
@@ -50,6 +52,17 @@ public class MessageRepository implements PanacheRepository<PGMessage> {
         pgMessage.persist();
 
         return pgMessage;
+    }
+
+
+    /**
+     * Find by chat ID
+     *
+     * @param chatId Chat ID
+     * @return User
+     */
+    public List<PGMessage> findByChatId(String chatId) {
+        return find("chat.telChatId", chatId).list();
     }
 
 }

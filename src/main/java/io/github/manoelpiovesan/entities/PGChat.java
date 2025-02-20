@@ -23,7 +23,7 @@ public class PGChat extends AbstractFullEntity {
     @Column(name = "tel_chat_id", nullable = false)
     public String telChatId;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     public User user;

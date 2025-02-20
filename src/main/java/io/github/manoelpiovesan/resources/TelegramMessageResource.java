@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * @author Manoel Rodrigues
  */
-@Path("/telegram")
+@Path("/t")
 public class TelegramMessageResource {
 
 
@@ -26,7 +26,7 @@ public class TelegramMessageResource {
      * @param message Message to send
      */
     @POST
-    @Path("/{chatId}")
+    @Path("/chat/{chatId}")
     @Consumes("application/json")
     public Response sendMessage(@PathParam("chatId") String chatId, String message) {
         try {
@@ -43,8 +43,21 @@ public class TelegramMessageResource {
      * @return List of messages
      */
     @GET
+    @Path("/messages")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAll() {
         return Response.ok(messageRepository.listAll()).build();
+    }
+
+    /**
+     * Get messages by chat ID
+     *
+     * @param chatId Chat ID
+     * @return Message
+     */
+    @GET
+    @Path("/chat/{chatId}")
+    public Response getByChatId(@PathParam("chatId") String chatId) {
+        return Response.ok(messageRepository.findByChatId(chatId)).build();
     }
 }
