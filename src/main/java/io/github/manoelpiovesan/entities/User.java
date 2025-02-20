@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.apache.camel.component.telegram.model.IncomingMessage;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -33,7 +34,7 @@ public class User extends AbstractFullEntity{
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    public List<Chat> chats;
+    public List<PGChat> chats;
 
 
     public User() {
@@ -51,5 +52,33 @@ public class User extends AbstractFullEntity{
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
+    }
+
+    /**
+     * Constructor from IncomingMessage
+     *
+     * @param msgReceived Message Received
+     */
+    public User(IncomingMessage msgReceived) {
+        this.telUserId = msgReceived.getFrom().getId();
+        this.firstName = msgReceived.getFrom().getFirstName();
+        this.lastName = msgReceived.getFrom().getLastName();
+        this.username = msgReceived.getFrom().getUsername();
+    }
+
+
+    /**
+     * To String
+     *
+     */
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", telUserId=" + telUserId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

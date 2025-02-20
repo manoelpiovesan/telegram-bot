@@ -1,14 +1,12 @@
 package io.github.manoelpiovesan.telegram;
 
+import io.github.manoelpiovesan.entities.PGMessage;
 import io.github.manoelpiovesan.repositories.MessageRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.Exchange;
-import org.apache.camel.Header;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.telegram.model.IncomingMessage;
-
-import java.time.Instant;
 
 /**
  * @author Manoel Rodrigues
@@ -16,7 +14,10 @@ import java.time.Instant;
 @ApplicationScoped
 public class TelegramRoute extends RouteBuilder {
     @Inject
-    MessageRepository messageRepository;
+    MessageRepository msgRepository;
+
+    @Inject
+    TelegramService telegramService;
 
     /**
      * Configure the route
@@ -35,15 +36,13 @@ public class TelegramRoute extends RouteBuilder {
      * @param exchange Exchange
      */
     public void onMessageReceived(Exchange exchange) {
-        String message = exchange.getIn().getBody(String.class);
-        Long chatId = exchange.getIn().getHeader("CamelTelegramChatId", Long.class);
 
         IncomingMessage msg = exchange.getIn().getBody(IncomingMessage.class);
+        PGMessage pgMsg = msgRepository.store(msg);
 
-        System.out.println("Message received: " + msg.toString() + " - " + chatId);
-
-        msg.getDate();
-        Instant timestamp = msg.getDate();
+        if (pgMsg != null) {
+            telegramService.sendMessage(msg.getChat().getId(), "Message stored! \n" + pgMsg.toString());
+        }
 
     }
 
